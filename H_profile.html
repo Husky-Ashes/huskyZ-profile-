@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Profile Card</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #0a0a15;
+      font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.4s ease;
+    }
+
+    body.light {
+      background-color: #e6ecf2;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #3b82f6;
+    }
+
+    .loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: #0a0a15;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .loader span {
+      width: 20px;
+      height: 20px;
+      background: #3b82f6;
+      margin: 5px;
+      border-radius: 50%;
+      animation: bounce 1s infinite alternate;
+    }
+
+    .loader span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .loader span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-20px); }
+    }
+
+    .card {
+      position: relative;
+      width: 320px;
+      background-color: #111827;
+      border-radius: 20px;
+      padding: 30px 25px;
+      color: white;
+      text-align: center;
+      box-shadow:
+        0 0 40px 10px rgba(0, 255, 255, 0.6),
+        0 0 80px 20px rgba(255, 255, 0, 0.1),
+        inset 0 0 20px rgba(0, 255, 255, 0.3);
+      animation: eyeGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes eyeGlow {
+      0% {
+        box-shadow:
+          0 0 20px 5px rgba(0, 255, 255, 0.2),
+          0 0 40px 10px rgba(255, 255, 0, 0.1),
+          inset 0 0 5px rgba(0, 255, 255, 0.1);
+      }
+      100% {
+        box-shadow:
+          0 0 60px 15px rgba(0, 255, 255, 0.8),
+          0 0 100px 30px rgba(255, 255, 0, 0.2),
+          inset 0 0 30px rgba(0, 255, 255, 0.5);
+      }
+    }
+
+    .card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+      border: 3px solid transparent;
+      animation: borderGlow 2s infinite alternate;
+    }
+
+    @keyframes borderGlow {
+      0% {
+        box-shadow: 0 0 10px red, 0 0 20px darkblue;
+        border-color: red;
+      }
+      100% {
+        box-shadow: 0 0 10px darkblue, 0 0 20px red;
+        border-color: darkblue;
+      }
+    }
+
+    .card h2 {
+      margin: 10px 0 5px;
+      color: #3b82f6;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #d1d5db;
+    }
+
+    .socials a {
+      margin: 0 10px;
+      font-size: 20px;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+      position: relative;
+      text-decoration: none;
+    }
+
+    /* Default social color */
+    .socials a:not(.pgr):not(.mlbb):not(.discord):not(.instagram) {
+      color: #3b82f6;
+    }
+
+    .socials a:not(.pgr):not(.mlbb):not(.discord):not(.instagram):hover {
+      color: #60a5fa;
+      text-shadow: 0 0 10px #00ffff;
+    }
+
+    .socials a.pgr {
+      color: #ff4c4c;
+      text-shadow: 0 0 8px #ff4c4c;
+    }
+
+    .socials a.pgr:hover {
+      text-shadow: 0 0 10px #ff4c4c, 0 0 20px #ff0000;
+    }
+
+    .socials a.mlbb {
+      color: #00bfff;
+      text-shadow: 0 0 8px #00bfff;
+    }
+
+    .socials a.mlbb:hover {
+      text-shadow: 0 0 10px #00bfff, 0 0 20px #3b82f6;
+    }
+
+    .socials a.instagram {
+      color: #e1306c;
+      text-shadow: 0 0 10px #fd1d1d, 0 0 20px #833ab4;
+    }
+
+    .socials a.instagram:hover {
+      text-shadow: 0 0 15px #f77737, 0 0 25px #e1306c;
+    }
+
+    .socials a.discord {
+      color: #5865F2;
+      text-shadow: 0 0 8px #5865F2;
+    }
+
+    .socials a.discord:hover {
+      text-shadow: 0 0 12px #5865F2, 0 0 20px #3b82f6;
+    }
+
+    .socials a::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      padding: 5px 8px;
+      border-radius: 5px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      font-size: 12px;
+    }
+
+    .socials a:hover::after {
+      opacity: 1;
+    }
+
+    #popupOverlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      flex-direction: column;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    #popupOverlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    #popupOverlay img {
+      max-width: 90%;
+      max-height: 90%;
+      border: 5px solid white;
+      border-radius: 10px;
+    }
+
+    #popupOverlay button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="loader" id="loader">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <button class="theme-toggle" id="themeToggle">
+    <i class="fas fa-adjust"></i>
+  </button>
+
+  <div class="card">
+    <img src="Knight.jpg" alt="Knight">
+    <h2>Husky</h2>
+    <p>A Human That Invisible<br/>Just A Humble Man</p>
+    <div class="socials">
+      <a href="https://www.instagram.com/huskyz00" target="_blank" class="instagram" data-tooltip="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="https://discord.com/users/973227725311578243" target="_blank" class="discord" data-tooltip="Discord">
+        <i class="fab fa-discord"></i>
+      </a>
+      <a href="javascript:void(0);" onclick="showPopup('pgr-profile.jpg')" class="pgr" data-tooltip="Punishing Gray Raven">
+        <i class="fas fa-bolt"></i>
+      </a>
+      <a href="javascript:void(0);" onclick="showPopup('MLBB-Profile.jpg')" class="mlbb" data-tooltip="Mobile Legends">
+        <i class="fas fa-shield-alt"></i>
+      </a>
+    </div>
+  </div>
+
+  <div id="popupOverlay">
+    <img id="popupImage" src="" alt="Game Profile">
+    <button onclick="closePopup()">Close</button>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {
+      document.getElementById('loader').style.display = 'none';
+    });
+
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+    });
+
+    const popupOverlay = document.getElementById('popupOverlay');
+    const popupImage = document.getElementById('popupImage');
+
+    function showPopup(imageSrc) {
+      popupImage.src = imageSrc;
+      popupOverlay.classList.add('active');
+    }
+
+    function closePopup() {
+      popupOverlay.classList.remove('active');
+      setTimeout(() => {
+        if (!popupOverlay.classList.contains('active')) {
+          popupOverlay.style.display = 'none';
+        }
+      }, 400);
+    }
+
+    popupOverlay.addEventListener('click', (e) => {
+      if (e.target === popupOverlay) {
+        closePopup();
+      }
+    });
+
+    const observer = new MutationObserver(() => {
+      if (popupOverlay.classList.contains('active')) {
+        popupOverlay.style.display = 'flex';
+      }
+    });
+    observer.observe(popupOverlay, { attributes: true, attributeFilter: ['class'] });
+  </script>
+</body>
+</html>
